@@ -21,19 +21,19 @@ func NewCache() Cache {
 // Get methode  returns the value associated with the key  and the boolean ok
 //(true if exists, false if not), if the deadline of the key/value pair has not been exceeded yet
 func (c Cache) Get(key string) (string, bool) {
-	var valid bool
 	t, ok := c.values[key] // comma ok time.Before/time.After
-	if ok {
-		valid = t.deadLine.After(time.Now())
+	if ok && t.deadLine.After(time.Now()) {
+		return t.value, true
 	}
-	return t.value, valid
+	return t.value, false
 }
 
 // Put places a value with an associated key into cache. Value put with this method never expired
 //(have infinite deadline). Putting into the existing key should overwrite the value
 func (c *Cache) Put(key, value string) { // needs mutex implementation!
 	// interesting to check what is the item.deadLine parameter
-	c.values[key] = item{value: value}
+	itemNew := item{value: value}
+	c.values[key] = itemNew
 }
 
 // Keys returns the slice of existing (non-expired keys)

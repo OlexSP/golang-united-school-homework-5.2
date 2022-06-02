@@ -31,7 +31,7 @@ func (c *Cache) Get(key string) (string, bool) {
 
 // Put places a value with an associated key into cache. Value put with this method never expired
 //(have infinite deadline). Putting into the existing key should overwrite the value
-func (c *Cache) Put(key, value string) {
+func (c *Cache) Put(key, value string) { // needs mutex implementation
 	c.values[key] = Item{value, nil}
 }
 
@@ -46,6 +46,8 @@ func (c *Cache) Keys() []string {
 	return keySlice
 }
 
-func (c *Cache) PutTill(key, value string, deadline time.Time) {
+// PutTill (key string, value string, deadline time.Time) Should do the same as Put,
+//but the key/value pair should expire by given deadline
+func (c *Cache) PutTill(key, value string, deadline time.Time) { // needs mutex implementation
 	c.values[key] = Item{value, &deadline}
 }
